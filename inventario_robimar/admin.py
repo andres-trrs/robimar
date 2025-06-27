@@ -45,6 +45,7 @@ class ArriendoDetalleInline(admin.TabularInline):
 class ArriendoAdmin(admin.ModelAdmin):
     list_display = ('id', 'cliente', 'fecha_arriendo', 'fecha_devolucion', 'estado', 'mostrar_total')
     list_filter = ('estado', 'fecha_arriendo')
+    autocomplete_fields = ['cliente']
     actions = [marcar_como_devuelto, cancelar_arriendo]
     search_fields = ('cliente__nombre',)
     inlines = [ArriendoDetalleInline]  # ⬅️ Aquí se incluye el formulario para múltiples productos
@@ -69,4 +70,3 @@ class ArriendoDetalleAdmin(admin.ModelAdmin):
 
     mostrar_valor_unitario.short_description = "Valor unitario"
     mostrar_valor_total.short_description = "Valor total"
-    
