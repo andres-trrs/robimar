@@ -27,7 +27,6 @@ class Cliente(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        # Si el RUT se ingresó sin guion ni dígito verificador, lo calculamos
         if self.rut.isdigit():
             self.rut = f"{self.rut}-{self.calcular_dv(self.rut)}"
         super().save(*args, **kwargs)
@@ -126,7 +125,6 @@ class ArriendoDetalle(models.Model):
         return f"{self.material.nombre} x{self.cantidad} (#{self.arriendo.id})"
 
 
-# ⬇️ Descontar stock al crear detalle
 @receiver(post_save, sender=ArriendoDetalle)
 def descontar_stock_al_crear(sender, instance, created, **kwargs):
     if created and instance.arriendo.estado == 'activo':
@@ -137,7 +135,6 @@ def descontar_stock_al_crear(sender, instance, created, **kwargs):
         material.save()
 
 
-# ⬆️ Devolver stock al eliminar detalle (si el arriendo sigue activo)
 @receiver(pre_delete, sender=ArriendoDetalle)
 def devolver_stock_al_eliminar(sender, instance, **kwargs):
     if instance.arriendo.estado == 'activo':
